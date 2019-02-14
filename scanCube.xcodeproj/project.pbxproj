@@ -238,6 +238,7 @@
 		9082CF31215D695C00C21533 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.3.7/include/eigen3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -245,6 +246,7 @@
 		9082CF32215D695C00C21533 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.3.7/include/eigen3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

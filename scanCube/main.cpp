@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 
 using namespace std;
 using namespace Eigen;
@@ -36,18 +37,11 @@ Vector3f orientation(-1, 0, 0);
 double spreadness = 25;
 double resolution = 1;
 
-Matrix3f rotationMatrix(double angle, Vector3f axis) {
-    // returns the rotation matrix that rotates a point some about about an
-    // arbitrary axis
-    double rad = angle / 180 * 3.1416;
-    Matrix3f crossProductMatrix;
-    crossProductMatrix << 0, -axis[2], axis[1], axis[2], 0, -axis[0], -axis[1], axis[0], 0;
-    return cosf(rad) * Matrix3f::Identity() + sinf(rad) * crossProductMatrix + (1 - cosf(rad)) * axis * axis.transpose();
-}
-
 Vector3f getRotated(Vector3f original, double angle, Vector3f axis){
     // rotates the original point about the specified axis
-    return rotationMatrix(angle, axis) * original;
+    double rad = angle / 180 * 3.1416;
+    AngleAxis<float> rot(rad, axis);
+    return rot * original;
 }
 
 bool rayPlaneIntersection(Vector3f& intersection, Vector3f ray, Vector3f probe,
@@ -70,7 +64,8 @@ bool checkPointInTriangle(Vector3f point, Vector3f p1, Vector3f p2, Vector3f p3)
     
     Matrix2f A;
     A << v0.dot(v0), v0.dot(v1),
-    v1.dot(v0), v1.dot(v1);
+        v1.dot(v0), v1.dot(v1);
+    
     Vector2f b(vp.dot(v0), vp.dot(v1));
     
     // Use Cramer's Rule to solve Aw = b
@@ -278,7 +273,8 @@ void display(void)
                 glBegin(GL_POINTS); //starts drawing of points
                 glVertex3f(intersection[0],intersection[1],intersection[2]);
                 glEnd();//end drawing of points
-                //                cout << intersection[0] << " " << intersection[1] << " " << intersection[2] << endl;
+                float distance = (probe - intersection).norm();
+                cout << intersection[0] << " " << intersection[1] << " " << intersection[2] << " " << distance << endl;
                 
                 count++;
                 continue;
@@ -287,7 +283,8 @@ void display(void)
                 glBegin(GL_POINTS); //starts drawing of points
                 glVertex3f(intersection[0],intersection[1],intersection[2]);
                 glEnd();//end drawing of points
-                //                cout << intersection[0] << " " << intersection[1] << " " << intersection[2] << endl;
+                float distance = (probe - intersection).norm();
+                cout << intersection[0] << " " << intersection[1] << " " << intersection[2] << " " << distance << endl;
                 
                 count++;
                 continue;
